@@ -38,7 +38,7 @@ $(function() {
              // determines if url has been defined
              expect(feed.url).toBeDefined();
              // determines if url is empty
-             expect(feed.length).not.toBe(0);
+             expect(feed.url.length).not.toBe(0);
            });
          });
 
@@ -116,19 +116,24 @@ $(function() {
          * Remember, loadFeed() is asynchronous.
          */
 
-        var previousUrl;
-        var newUrl;
-
          beforeEach(function(done) {
-           previousUrl = $('.entry-link').attr('href');
-           loadFeed(1, done);
+           $('.feed').empty();
+
+           loadFeed(0, function() {
+             entries_before = $('.feed').find("h2").text();
+             console.log("entries before:" + entries_before);
+             done();
+           });
          });
 
          it('Content changes when a new feed is loaded by the loadFeed function', function(done) {
            // confirms the new Url does not match the Url of the previous feed
-           newUrl = $('.entry-link').attr('href');
-           expect(newUrl).not.toBe(previousUrl);
-           done();
+           loadFeed(1, function() {
+             entries_after = $('.feed').find("h2").text();
+             console.log("entries after: " + entries_after);
+             expect(entries_before).not.toEqual(entries_after);
+             done();
+           });
          });
        });
 
